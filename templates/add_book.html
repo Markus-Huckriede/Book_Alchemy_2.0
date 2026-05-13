@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Buch hinzufügen - Book Alchemy{% endblock %}
+
+{% block content %}
+<section class="page-heading">
+    <a class="back-link" href="{{ url_for('main.home') }}">Zurück zur Bibliothek</a>
+    <h1>Buch hinzufügen</h1>
+    <p>Gib eine ISBN oder einen Titel ein. Book Alchemy sucht die Daten kostenlos bei Open Library und legt den Autor automatisch an.</p>
+</section>
+
+<section class="form-shell">
+    <form class="panel-form" method="POST" action="{{ url_for('main.add_book') }}">
+        <label class="field">
+            <span>ISBN oder Titel</span>
+            <input id="lookup-query" type="text" name="lookup_query" placeholder="9780143111597 oder Der Hobbit" autocomplete="off" required>
+        </label>
+
+        <div class="scanner-panel" data-scanner-panel hidden>
+            <video data-scanner-video playsinline muted></video>
+            <p data-scanner-status>Scanner wird gestartet...</p>
+        </div>
+
+        <div class="form-grid">
+            <button class="button button-light" type="button" data-scan-isbn>ISBN scannen</button>
+            <label class="field">
+                <span>Bewertung optional</span>
+                <input type="number" name="rating" min="1" max="10" placeholder="1 bis 10">
+            </label>
+        </div>
+
+        <p class="form-note">
+            Der Scanner nutzt die Kamera deines Geräts und kostet nichts. Falls dein Browser die Barcode-Erkennung nicht unterstützt, kannst du die ISBN einfach eintippen.
+        </p>
+
+        <div class="form-actions">
+            <a class="button button-light" href="{{ url_for('main.home') }}">Abbrechen</a>
+            <button class="button" type="submit">Suchen und speichern</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

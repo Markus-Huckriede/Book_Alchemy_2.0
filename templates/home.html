@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Book Alchemy - Bibliothek{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div>
+        <p class="eyebrow">Persönliche Sammlung</p>
+        <h1>Meine Büchersammlung</h1>
+       
+    </div>
+    <div class="hero-stat">
+        <span>{{ books|length }}</span>
+        <small>{% if books|length == 1 %}Buch angezeigt{% else %}Bücher angezeigt{% endif %}</small>
+    </div>
+</section>
+
+<section class="toolbar" aria-label="Suche und Sortierung">
+    <form class="search-form" method="GET" action="{{ url_for('main.home') }}">
+        <label class="field field-grow">
+            <span>Suchen</span>
+            <input type="text" name="search" placeholder="Titel oder Name eingeben" value="{{ search_query }}">
+        </label>
+        <label class="field">
+            <span>Suchfeld</span>
+            <select name="search_field">
+                <option value="title" {% if search_field == 'title' %}selected{% endif %}>Titel</option>
+                <option value="author" {% if search_field == 'author' %}selected{% endif %}>Autor</option>
+            </select>
+        </label>
+        <label class="field">
+            <span>Sortieren</span>
+            <select name="sort_by">
+                <option value="title" {% if sort_by == 'title' %}selected{% endif %}>Titel</option>
+                <option value="author" {% if sort_by == 'author' %}selected{% endif %}>Autor</option>
+            </select>
+        </label>
+        <button class="button" type="submit">Anwenden</button>
+    </form>
+</section>
+
+{% if books %}
+<section class="book-grid" aria-label="Buecher">
+    {% for book in books %}
+    <article class="book-card">
+        <a class="cover-link" href="{{ url_for('main.book_detail', book_id=book.id) }}" aria-label="Details zu {{ book.title }}">
+            {% if book.cover_url %}
+                <img class="cover" src="{{ book.cover_url }}" alt="Cover von {{ book.title }}">
+            {% else %}
+                <div class="cover cover-placeholder">
+                    <span>{{ book.title[:1] }}</span>
+                </div>
+            {% endif %}
+        </a>
+        <div class="book-content">
+            <h2><a href="{{ url_for('main.book_detail', book_id=book.id) }}">{{ book.title }}</a></h2>
+            <p class="muted">von <a href="{{ url_for('main.author_detail', author_id=book.author.id) }}">{{ book.author.name }}</a></p>
+            <div class="meta-row">
+                <span>{{ book.publication_year or "Jahr unbekannt" }}</span>
+                <span>{{ book.rating if book.rating else "Keine" }}/10</span>
+            </div>
+        </div>
+        <form method="POST" action="{{ url_for('main.delete_book', book_id=book.id) }}">
+            <button class="text-danger" type="submit" onclick="return confirm('Dieses Buch wirklich löschen?');">
+                Löschen
+            </button>
+        </form>
+    </article>
+    {% endfor %}
+</section>
+{% else %}
+<section class="empty-state">
+    <p class="eyebrow">Noch nichts hier</p>
+    <h2>Deine Bibliothek wartet auf ihr erstes Buch.</h2>
+    <p>Gib einfach eine ISBN oder einen Titel ein. Autor und Buchdaten werden automatisch gesucht.</p>
+    <div class="empty-actions">
+        <a class="button" href="{{ url_for('main.add_book') }}">Buch hinzufügen</a>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

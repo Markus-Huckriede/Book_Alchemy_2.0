@@ -1,0 +1,56 @@
+{% extends "base.html" %} {% block title %}{{ book.title }} - Book Alchemy{%
+endblock %} {% block content %}
+<section class="detail-layout">
+  <div class="detail-cover">
+    {% if book.cover_url %}
+    <img
+      class="cover large-cover"
+      src="{{ book.cover_url }}"
+      alt="Cover von {{ book.title }}"
+    />
+    {% else %}
+    <div class="cover large-cover cover-placeholder">
+      <span>{{ book.title[:1] }}</span>
+    </div>
+    {% endif %}
+  </div>
+  <article class="detail-panel">
+    <a class="back-link" href="{{ url_for('main.home') }}">Zurück zur Bibliothek</a>
+    <h1>{{ book.title }}</h1>
+    <p class="muted">
+      von
+      <a href="{{ url_for('main.author_detail', author_id=book.author.id) }}"
+        >{{ book.author.name }}</a
+      >
+    </p>
+
+    <dl class="detail-list">
+      <div>
+        <dt>ISBN</dt>
+        <dd>{{ book.isbn or "Nicht hinterlegt" }}</dd>
+      </div>
+      <div>
+        <dt>Erscheinungsjahr</dt>
+        <dd>{{ book.publication_year or "Unbekannt" }}</dd>
+      </div>
+      <div>
+        <dt>Bewertung</dt>
+        <dd>
+          {% if book.rating %}{{ book.rating }}/10{% else %}Noch nicht
+          bewertet{% endif %}
+        </dd>
+      </div>
+    </dl>
+
+    <form method="POST" action="{{ url_for('main.delete_book', book_id=book.id) }}">
+      <button
+        class="button button-danger"
+        type="submit"
+        onclick="return confirm('Dieses Buch wirklich löschen?');"
+      >
+        Buch löschen
+      </button>
+    </form>
+  </article>
+</section>
+{% endblock %}

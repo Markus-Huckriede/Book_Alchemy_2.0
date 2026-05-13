@@ -1,0 +1,48 @@
+{% extends "base.html" %} {% block title %}{{ author.name }} - Book Alchemy{%
+endblock %} {% block content %}
+<section class="page-heading">
+  <a class="back-link" href="{{ url_for('main.home') }}">Zurück zur Bibliothek</a>
+  <h1>{{ author.name }}</h1>
+  <p>
+    Geboren: {{ author.birth_date or "unbekannt" }} {% if author.date_of_death
+    %}<span class="dot"></span> Gestorben: {{ author.date_of_death }}{% endif %}
+  </p>
+</section>
+
+<section class="author-books">
+  <div class="section-title">
+    <h2>Bücher von {{ author.name }}</h2>
+    <span>{{ author.books|length }}</span>
+  </div>
+  {% if author.books %}
+  <div class="list-panel">
+    {% for book in author.books %}
+    <a class="book-row" href="{{ url_for('main.book_detail', book_id=book.id) }}">
+      <span>{{ book.title }}</span>
+      <small
+        >{% if book.rating %}{{ book.rating }}/10{% else %}ohne Bewertung{%
+        endif %}</small
+      >
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state compact">
+    <p>Für diese Person sind noch keine Bücher gespeichert.</p>
+  </div>
+  {% endif %}
+
+  <form
+    method="POST"
+    action="{{ url_for('main.delete_author', author_id=author.id) }}"
+  >
+    <button
+      class="button button-danger"
+      type="submit"
+      onclick="return confirm('Diese Person und alle zugehörigen Bücher wirklich löschen?');"
+    >
+      Autor löschen
+    </button>
+  </form>
+</section>
+{% endblock %}
