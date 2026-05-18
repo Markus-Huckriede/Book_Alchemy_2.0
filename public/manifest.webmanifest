@@ -1,0 +1,37 @@
+{
+  "name": "Book Alchemy",
+  "short_name": "BookAlchemy",
+  "description": "Eine installierbare Bibliotheks-App zum Speichern und Suchen deiner Bücher.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f6f3ed",
+  "theme_color": "#2f6f73",
+  "icons": [
+    {
+      "src": "/static/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/static/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Buch hinzufügen",
+      "url": "/add_book",
+      "description": "Ein Buch per ISBN oder Titel hinzufügen"
+    }
+  ]
+}

@@ -38,6 +38,43 @@ Du kannst den Port überschreiben:
 PORT=5003 python app.py
 ```
 
+## Deployment auf Vercel
+
+Dieses Repo ist für Vercel vorbereitet:
+
+- `app.py` exportiert die Flask-Instanz `app`, die Vercel als Function deployt.
+- `vercel.json` routet alle Requests auf `app.py` und nimmt `templates/` sowie `static/` ins Function-Bundle auf.
+- `public/` enthält eine Kopie der statischen Assets, damit Vercel sie direkt ausliefern kann.
+- `.vercelignore` hält lokale Dateien wie `.venv/`, `library.sqlite` und Python-Caches aus dem Deployment heraus.
+
+Deployment per Vercel CLI:
+
+```bash
+npm i -g vercel
+vercel login
+vercel
+vercel --prod
+```
+
+Alternativ kannst du das Git-Repository in Vercel importieren. Als Framework Preset reicht `Other`; ein Build Command ist nicht nötig.
+
+Lege in Vercel unter `Project Settings` -> `Environment Variables` diese Variablen an:
+
+```text
+SECRET_KEY=ein-langer-zufaelliger-string
+DATABASE_URL=postgresql://...
+```
+
+Wenn du Vercel Postgres/Storage verwendest, kann die Variable auch `POSTGRES_URL` heißen; die App liest beide Namen. Trage bei `DATABASE_URL` niemals den Platzhalter `postgresql://...` ein, sondern immer den vollständigen Connection String deiner Datenbank.
+
+Einen Secret Key kannst du lokal so erzeugen:
+
+```bash
+python3 -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+Wichtig: `SECRET_KEY` ist auf Vercel erforderlich. Ohne `DATABASE_URL` nutzt die App dort SQLite im flüchtigen `/tmp`-Verzeichnis, was nur für einen Test-Deploy gedacht ist. Für produktive Nutzung solltest du eine Postgres-Datenbank anbinden und deren Connection String als `DATABASE_URL` in Vercel setzen.
+
 ## Nutzung
 
 Öffne `Buch hinzufügen`, gib eine ISBN oder einen Titel ein und speichere das gefundene Buch. Wenn Open Library passende Daten findet, werden Buch und Autor automatisch in der lokalen SQLite-Datenbank gespeichert.
@@ -105,6 +142,43 @@ You can override the port:
 ```bash
 PORT=5003 python app.py
 ```
+
+## Deploy to Vercel
+
+This repo is prepared for Vercel:
+
+- `app.py` exports the Flask instance `app`, which Vercel deploys as a Function.
+- `vercel.json` routes all requests to `app.py` and includes `templates/` plus `static/` in the Function bundle.
+- `public/` contains a copy of the static assets so Vercel can serve them directly.
+- `.vercelignore` keeps local files such as `.venv/`, `library.sqlite`, and Python caches out of the deployment.
+
+Deploy with the Vercel CLI:
+
+```bash
+npm i -g vercel
+vercel login
+vercel
+vercel --prod
+```
+
+You can also import the Git repository in Vercel. Use `Other` as the Framework Preset; no Build Command is needed.
+
+Add these variables in Vercel under `Project Settings` -> `Environment Variables`:
+
+```text
+SECRET_KEY=a-long-random-string
+DATABASE_URL=postgresql://...
+```
+
+If you use Vercel Postgres/Storage, the variable may also be named `POSTGRES_URL`; the app reads both names. Never set `DATABASE_URL` to the placeholder `postgresql://...`; use the full connection string from your database provider.
+
+You can generate a secret key locally with:
+
+```bash
+python3 -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+Important: `SECRET_KEY` is required on Vercel. Without `DATABASE_URL`, the app uses SQLite in ephemeral `/tmp` storage, which is only meant for a test deployment. For production use, connect a Postgres database and set its connection string as `DATABASE_URL` in Vercel.
 
 ## Usage
 

@@ -1,0 +1,13 @@
+{
+  "functions": {
+    "app.py": {
+      "includeFiles": "{templates/**,static/**}"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/app.py"
+    }
+  ]
+}

@@ -130,6 +130,11 @@ def service_worker():
     return send_from_directory("static", "service-worker.js", mimetype="application/javascript")
 
 
+@main.route("/favicon.ico")
+def favicon():
+    return send_from_directory("static/icons", "icon.svg", mimetype="image/svg+xml")
+
+
 def _get_or_create_author(name):
     normalized_name = name.strip() or "Unbekannter Autor"
     author = Author.query.filter(Author.name.ilike(normalized_name)).first()
